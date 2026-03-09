@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AUTH_SECRET": "replace-with-a-long-random-string",
+    "COSMOS_PRIMARY_KEY": "replace-with-cosmos-primary-key"
+  }
+}

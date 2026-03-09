@@ -1,0 +1,64 @@
+{
+  "database": {
+    "id": "fitazuredb",
+    "containers": [
+      {
+        "id": "users",
+        "partitionKey": "/email",
+        "description": "Authentication profile for each user",
+        "sampleDocument": {
+          "id": "user_b4e67b5f",
+          "email": "user@example.com",
+          "passwordHash": "sha256-hash",
+          "createdAt": "2026-03-09T09:00:00.000Z",
+          "type": "user"
+        }
+      },
+      {
+        "id": "profiles",
+        "partitionKey": "/email",
+        "description": "Onboarding and body composition data",
+        "sampleDocument": {
+          "id": "profile_b4e67b5f",
+          "email": "user@example.com",
+          "heightCm": 178,
+          "weightKg": 75,
+          "fatPercent": 18,
+          "muscleMass": 42,
+          "updatedAt": "2026-03-09T09:10:00.000Z",
+          "type": "profile"
+        }
+      },
+      {
+        "id": "workouts",
+        "partitionKey": "/email",
+        "description": "Strength and cardio logs",
+        "sampleDocuments": [
+          {
+            "id": "workout_strength_001",
+            "email": "user@example.com",
+            "type": "strength",
+            "exerciseName": "Bench Press",
+            "sets": 4,
+            "reps": 8,
+            "weight": 70,
+            "createdAt": "2026-03-09T10:00:00.000Z"
+          },
+          {
+            "id": "workout_cardio_001",
+            "email": "user@example.com",
+            "type": "cardio",
+            "distanceKm": 5,
+            "timeMinutes": 28,
+            "caloriesBurned": 340,
+            "createdAt": "2026-03-09T10:40:00.000Z"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": {
+    "profiles": ["/email", "/updatedAt"],
+    "workouts": ["/email", "/createdAt", "/type"]
+  }
+}
