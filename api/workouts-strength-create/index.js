@@ -16,6 +16,6 @@ module.exports = async function (context, req) {
     return
   }
 
-  const entry = addWorkout(auth.email, { type: 'strength', exerciseName, sets, reps, weight })
+  const entry = await addWorkout(auth.email, { type: 'strength', exerciseName, sets, reps, weight })
   context.res = json(201, { log: entry })
 }

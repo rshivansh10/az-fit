@@ -11,13 +11,13 @@ module.exports = async function (context, req) {
     return
   }
 
-  const user = getUser(email)
+  const user = await getUser(email)
   if (!user || user.passwordHash !== hashPassword(password)) {
     context.res = json(401, { error: 'Invalid credentials.' })
     return
   }
 
-  const profileCompleted = Boolean(getProfile(email))
+  const profileCompleted = Boolean(await getProfile(email))
   const token = signToken({ email })
   context.res = json(200, { token, profileCompleted })
 }

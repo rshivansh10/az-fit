@@ -16,6 +16,6 @@ module.exports = async function (context, req) {
     return
   }
 
-  upsertProfile(auth.email, { heightCm, weightKg, fatPercent, muscleMass })
+  await upsertProfile(auth.email, { heightCm, weightKg, fatPercent, muscleMass })
   context.res = json(200, { success: true })
 }

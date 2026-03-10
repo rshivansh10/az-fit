@@ -4,6 +4,9 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AUTH_SECRET": "replace-with-a-long-random-string",
-    "COSMOS_PRIMARY_KEY": "replace-with-cosmos-primary-key"
+    "COSMOS_ENDPOINT": "https://<your-account>.documents.azure.com:443/",
+    "COSMOS_PRIMARY_KEY": "replace-with-cosmos-primary-key",
+    "COSMOS_DATABASE_ID": "fit-azure-database",
+    "COSMOS_CONTAINER_ID": "TasksDB"
   }
 }

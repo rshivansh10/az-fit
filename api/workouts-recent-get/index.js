@@ -10,7 +10,7 @@ module.exports = async function (context, req) {
   }
 
   const limit = Number(req.query?.limit || 5)
-  const logs = getRecentWorkouts(auth.email, Number.isFinite(limit) ? limit : 5)
+  const logs = await getRecentWorkouts(auth.email, Number.isFinite(limit) ? limit : 5)
 
   context.res = json(200, { logs })
 }

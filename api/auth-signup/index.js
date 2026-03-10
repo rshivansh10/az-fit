@@ -11,13 +11,13 @@ module.exports = async function (context, req) {
     return
   }
 
-  if (getUser(email)) {
+  if (await getUser(email)) {
     context.res = json(409, { error: 'Account already exists.' })
     return
   }
 
-  upsertUser(email, hashPassword(password))
-  const profileCompleted = Boolean(getProfile(email))
+  await upsertUser(email, hashPassword(password))
+  const profileCompleted = Boolean(await getProfile(email))
   const token = signToken({ email })
 
   context.res = json(201, { token, profileCompleted })

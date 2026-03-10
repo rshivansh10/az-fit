@@ -9,7 +9,7 @@ module.exports = async function (context, req) {
     return
   }
 
-  const profile = getProfile(auth.email)
+  const profile = await getProfile(auth.email)
   const suggestion = buildSuggestion(profile)
   context.res = {
     status: 200,
