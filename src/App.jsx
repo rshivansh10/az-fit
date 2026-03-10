@@ -63,6 +63,7 @@ function App() {
   const [authForm, setAuthForm] = useState(initialAuth)
   const [token, setToken] = useState(localStorage.getItem('fitToken') || '')
   const [profileDone, setProfileDone] = useState(localStorage.getItem('fitProfileDone') === 'true')
+  const [isGuest, setIsGuest] = useState(false)
   const [profileForm, setProfileForm] = useState(initialProfile)
   const [strengthForm, setStrengthForm] = useState(initialStrength)
   const [cardioForm, setCardioForm] = useState(initialCardio)
@@ -75,12 +76,39 @@ function App() {
   const authTitle = useMemo(() => (mode === 'login' ? 'Welcome Back' : 'Create Account'), [mode])
 
   useEffect(() => {
+    if (isGuest) {
+      setSuggestion({
+        category: 'Maintenance',
+        exercises: ['Push-ups', 'Cycling', 'Plank Holds']
+      })
+      setRecentLogs([
+        {
+          id: 'guest-1',
+          type: 'strength',
+          exerciseName: 'Bench Press',
+          sets: 4,
+          reps: 8,
+          weight: 60,
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'guest-2',
+          type: 'cardio',
+          distanceKm: 3.5,
+          timeMinutes: 22,
+          caloriesBurned: 260,
+          createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString()
+        }
+      ])
+      return
+    }
+
     if (!isAuthenticated || !profileDone) {
       return
     }
 
     refreshDashboard()
-  }, [isAuthenticated, profileDone])
+  }, [isAuthenticated, profileDone, isGuest])
 
   async function refreshDashboard() {
     try {
@@ -143,6 +171,21 @@ function App() {
     setError('')
 
     try {
+      if (isGuest) {
+        const entry = {
+          id: `${Date.now()}-guest-strength`,
+          type: 'strength',
+          exerciseName: strengthForm.exerciseName,
+          sets: Number(strengthForm.sets),
+          reps: Number(strengthForm.reps),
+          weight: Number(strengthForm.weight),
+          createdAt: new Date().toISOString()
+        }
+        setRecentLogs((prev) => [entry, ...prev].slice(0, 5))
+        setStrengthForm(initialStrength)
+        return
+      }
+
       await createStrengthLog(token, {
         exerciseName: strengthForm.exerciseName,
         sets: Number(strengthForm.sets),
@@ -161,6 +204,20 @@ function App() {
     setError('')
 
     try {
+      if (isGuest) {
+        const entry = {
+          id: `${Date.now()}-guest-cardio`,
+          type: 'cardio',
+          distanceKm: Number(cardioForm.distanceKm),
+          timeMinutes: Number(cardioForm.timeMinutes),
+          caloriesBurned: Number(cardioForm.caloriesBurned),
+          createdAt: new Date().toISOString()
+        }
+        setRecentLogs((prev) => [entry, ...prev].slice(0, 5))
+        setCardioForm(initialCardio)
+        return
+      }
+
       await createCardioLog(token, {
         distanceKm: Number(cardioForm.distanceKm),
         timeMinutes: Number(cardioForm.timeMinutes),
@@ -176,6 +233,7 @@ function App() {
   function logout() {
     setToken('')
     setProfileDone(false)
+    setIsGuest(false)
     setMode('landing')
     localStorage.removeItem('fitToken')
     localStorage.removeItem('fitProfileDone')
@@ -186,7 +244,13 @@ function App() {
     setMode(nextMode)
   }
 
-  if (!isAuthenticated && mode === 'landing') {
+  function openGuest() {
+    setError('')
+    setIsGuest(true)
+    setMode('guest')
+  }
+
+  if (!isAuthenticated && !isGuest && mode === 'landing') {
     return (
       <main className="relative overflow-hidden">
         <div className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-emerald-500/30 blur-3xl" />
@@ -222,6 +286,12 @@ function App() {
                   <LogIn size={16} />
                   Login
                 </button>
+                <button
+                  className="interactive inline-flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-5 py-3 font-semibold text-emerald-200"
+                  onClick={openGuest}
+                >
+                  Explore as Guest
+                </button>
               </div>
             </div>
 
@@ -253,7 +323,7 @@ function App() {
     )
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isGuest) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-8">
         <Card title={authTitle} icon={mode === 'login' ? LogIn : UserPlus}>
@@ -298,12 +368,19 @@ function App() {
           >
             Back to Landing Page
           </button>
+          <button
+            type="button"
+            className="interactive mt-2 w-full rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-200"
+            onClick={openGuest}
+          >
+            Explore as Guest
+          </button>
         </Card>
       </main>
     )
   }
 
-  if (!profileDone) {
+  if (!profileDone && !isGuest) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-xl items-center px-4 py-8">
         <Card title="Profile Setup" icon={Activity}>
@@ -372,9 +449,15 @@ function App() {
           className="interactive rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-slate-200"
           onClick={logout}
         >
-          Logout
+          {isGuest ? 'Exit Guest' : 'Logout'}
         </button>
       </header>
+
+      {isGuest ? (
+        <p className="mb-4 rounded-lg border border-emerald-700/50 bg-emerald-900/30 p-3 text-sm text-emerald-200">
+          You are exploring in guest mode. Workouts added here are temporary and won’t be saved.
+        </p>
+      ) : null}
 
       {error ? <p className="mb-4 rounded-lg border border-rose-700 bg-rose-900/40 p-3 text-sm text-rose-300">{error}</p> : null}
 
