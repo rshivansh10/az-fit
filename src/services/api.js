@@ -64,7 +64,7 @@ export function createCardioLog(token, payload) {
 }
 
 export function getRecentLogs(token) {
-  return request('workouts-recent-get', {
+  return request('workouts-recent-get?limit=5', {
     headers: { Authorization: `Bearer ${token}` }
   })
 }
