@@ -5,8 +5,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"],
-      "route": "workouts/strength"
+      "methods": ["post"]
     },
     {
       "type": "http",

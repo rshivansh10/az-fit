@@ -5,8 +5,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get"],
-      "route": "workouts/recent"
+      "methods": ["get"]
     },
     {
       "type": "http",
