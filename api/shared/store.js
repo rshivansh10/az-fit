@@ -25,7 +25,7 @@ function getContainer() {
 }
 
 function buildId(prefix, email) {
-  return `${prefix}_${email.replace('@', '_at_').replace('.', '_')}`}
+  return `${prefix}_${email.replace('@', '_at_').replace('.', '_')}`
 }
 
 async function upsertUser(email, passwordHash) {
