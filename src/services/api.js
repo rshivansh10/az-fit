@@ -18,7 +18,7 @@ async function request(path, options = {}) {
 }
 
 export function signup(payload) {
-  return request('auth/signup', {
+  return request('auth-signup', {
     method: 'POST',
     headers: jsonHeaders,
     body: JSON.stringify(payload)
@@ -26,7 +26,7 @@ export function signup(payload) {
 }
 
 export function login(payload) {
-  return request('auth/login', {
+  return request('auth-login', {
     method: 'POST',
     headers: jsonHeaders,
     body: JSON.stringify(payload)
@@ -34,7 +34,7 @@ export function login(payload) {
 }
 
 export function saveProfile(token, payload) {
-  return request('profile', {
+  return request('profile-upsert', {
     method: 'POST',
     headers: { ...jsonHeaders, Authorization: `Bearer ${token}` },
     body: JSON.stringify(payload)
@@ -42,13 +42,13 @@ export function saveProfile(token, payload) {
 }
 
 export function getSuggestions(token) {
-  return request('suggestions', {
+  return request('suggestions-get', {
     headers: { Authorization: `Bearer ${token}` }
   })
 }
 
 export function createStrengthLog(token, payload) {
-  return request('workouts/strength', {
+  return request('workouts-strength-create', {
     method: 'POST',
     headers: { ...jsonHeaders, Authorization: `Bearer ${token}` },
     body: JSON.stringify(payload)
@@ -56,7 +56,7 @@ export function createStrengthLog(token, payload) {
 }
 
 export function createCardioLog(token, payload) {
-  return request('workouts/cardio', {
+  return request('workouts-cardio-create', {
     method: 'POST',
     headers: { ...jsonHeaders, Authorization: `Bearer ${token}` },
     body: JSON.stringify(payload)
@@ -64,7 +64,7 @@ export function createCardioLog(token, payload) {
 }
 
 export function getRecentLogs(token) {
-  return request('workouts/recent', {
+  return request('workouts-recent-get?limit=5', {
     headers: { Authorization: `Bearer ${token}` }
   })
 }
